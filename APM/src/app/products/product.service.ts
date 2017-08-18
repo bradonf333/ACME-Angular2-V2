@@ -12,7 +12,7 @@ import 'rxjs/add/operator/do';
 export class ProductService {
 
     // Represents a web api url that would have access to the list of products
-    private _productUrl = 'api/products/products.json';
+    private _productUrl = './api/products/products.json';
 
     /**
      * Constructor to inject the Http Service from Angular
@@ -27,6 +27,7 @@ export class ProductService {
     getProducts(): Observable<IProduct[]> {
         return this._http.get(this._productUrl)
         .map((response: Response) => <IProduct[]> response.json())
+        .do(data => console.log('All: ' + JSON.stringify(data)))
         .catch(this.handleError);
     }
 
