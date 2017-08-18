@@ -9,7 +9,11 @@ import { ProductService } from './product.service';
 })
 export class ProductListComponent implements OnInit {
 
+    pageTitle: string = 'Product List';
     showImage: boolean;
+    imageWidth: number = 50;
+    imageMargin: number = 2;
+    listFilter: string;
     errorMessage: string;
     products: IProduct[];
 
@@ -24,5 +28,9 @@ export class ProductListComponent implements OnInit {
 
     toggleImage(): void {
         this.showImage = !this.showImage;
+    }
+
+    onRatingClicked(message: string): void {
+        this.pageTitle = 'Product List: ' + message;
     }
 }
