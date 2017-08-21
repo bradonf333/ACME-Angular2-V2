@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
+import { ProductDetailGuard } from './product-guard.service';
 
 
 @NgModule({
@@ -23,7 +24,7 @@ import { SharedModule } from '../shared/shared.module';
         HttpClientModule,
         RouterModule.forChild([
             { path: 'products', component: ProductListComponent },
-            { path: 'product/:id', component: ProductDetailComponent }
+            { path: 'product/:id', canActivate: [ProductDetailGuard], component: ProductDetailComponent }
         ])
     ],
     exports: [],
