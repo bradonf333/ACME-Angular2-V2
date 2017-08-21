@@ -1,11 +1,48 @@
-<div class='panel panel-primary'>
-    
-    <div class='panel-heading'>
-        {{ pageTitle }}
-    </div>
+<div class='panel panel-primary' *ngIf='product'>
 
-    <div class='panel-footer'>
-        <a class='btn btn-default' (click)='onBack()' style='width:80px'>
-        <i class='glyphicon glyphicon-chevron-left'></i>Back</a>
+  <div class='panel-heading'>
+    {{ pageTitle }}
+  </div>
+
+  <div class='panel-body'>
+    <div class='row'>
+      <div class='col-md-6'>
+        <div class='row'>
+          <div class='col-md-3'>Name:</div>
+          <div class='col-md-6'>{{ product.productName }}</div>
+        </div>
+        <div class='row'>
+          <div class='col-md-3'>Code:</div>
+          <div class='col-md-6'>{{ product.productCode }}</div>
+        </div>
+        <div class='row'>
+          <div class='col-md-3'>Description:</div>
+          <div class='col-md-6'>{{ product.description }}</div>
+        </div>
+        <div class='row'>
+          <div class='col-md-3'>Availability:</div>
+          <div class='col-md-6'>{{ product.releaseDate }}</div>
+        </div>
+        <div class='row'>
+          <div class='col-md-3'>Price:</div>
+          <div class='col-md-6'>{{ product.price | currency:'USD':true:'1.2-2' }}</div>
+        </div>
+        <div class='row'>
+          <div class='col-md-3'>5 Star Rating:</div>
+          <div class='col-md-6'>
+            <pm-star [rating]='product.starRating'>
+            </pm-star>
+          </div>
+        </div>
+      </div>
+      <div class='col-md-6'>
+        <img [src]='product.imageUrl' [title]='product.productName' [style.width.px]='imageWidth' [style.margin.px]='imageMargin'>
+      </div>
     </div>
+  </div>
+
+  <div class='panel-footer'>
+    <a class='btn btn-default' (click)='onBack()' style='width:80px'>
+        <i class='glyphicon glyphicon-chevron-left'></i>Back</a>
+  </div>
 </div>

@@ -31,6 +31,15 @@ export class ProductService {
     }
 
     /**
+     * Searches the list of products by calling the getProducts method and searching
+     * for the given id.
+     */
+    getProduct(id: number): Observable<IProduct> {
+        return this.getProducts()
+        .map((products: IProduct[]) => products.find(p => p.productId === id));
+    }
+
+    /**
      * Takes an error, logs it to the console and throws it to the calling code.
      * @param error
      */

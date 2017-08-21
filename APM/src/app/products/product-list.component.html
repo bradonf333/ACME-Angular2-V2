@@ -33,12 +33,12 @@
         <tbody>
           <tr *ngFor='let product of filteredProducts'>
             <td>
-              <img *ngIf='showImage' 
-              [src]='product.imageUrl' [title]='product.productName' 
-              [style.width.px]='imageWidth' [style.margin.px]='imageMargin'>
+              <img *ngIf='showImage' [src]='product.imageUrl' [title]='product.productName' 
+                  [style.width.px]='imageWidth' [style.margin.px]='imageMargin'>
             </td>
             <td><a [routerLink]="['/product', product.productId]">
-              {{ product.productName }}</a></td>
+              {{ product.productName }}</a>
+            </td>
             <td>{{ product.productCode | lowercase | convertToSpaces: '-' }}</td>
             <td>{{ product.releaseDate }}</td>
             <td>{{ product.price | currency:'USD':true:'1.2-2' }}</td>
