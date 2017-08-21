@@ -18,7 +18,7 @@ export class ProductDetailGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot): boolean {
 
         // Get the id from the route variable and convert it to a number
-        let id = +route.url[1].path;
+        const id = +route.url[1].path;
 
         if (isNaN(id) || id < 1) {
             alert('Invalid product Id');
