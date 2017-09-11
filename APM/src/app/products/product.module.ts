@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { ProductDetailGuard } from './product-guard.service';
+import { ProductEditComponent } from './product-edit.component';
 
 
 @NgModule({
@@ -18,12 +19,14 @@ import { ProductDetailGuard } from './product-guard.service';
         ProductListComponent,
         ProductDetailComponent,
         ConvertToSpacesPipe,
+        ProductEditComponent,
     ],
     imports: [
         SharedModule,
         HttpClientModule,
         RouterModule.forChild([
             { path: 'products', component: ProductListComponent },
+            { path: 'productEdit', component: ProductEditComponent},
             { path: 'product/:id', canActivate: [ProductDetailGuard], component: ProductDetailComponent }
         ])
     ],
