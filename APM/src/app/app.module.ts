@@ -8,11 +8,12 @@ import { AppComponent } from './app.component';
 import { ProductModule } from './products/product.module';
 import { WelcomeComponent } from './home/welcome.component';
 import { ProductDetailGuard } from './products/product-guard.service';
+import { ProductEditComponent } from './product-edit/product-edit.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent, WelcomeComponent
+    AppComponent, WelcomeComponent, ProductEditComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,
