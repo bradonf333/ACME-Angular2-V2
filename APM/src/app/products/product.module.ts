@@ -6,7 +6,7 @@ import { ProductService } from './product.service';
 import { StarComponent } from '../shared/star.component';
 import { ProductDetailComponent } from './product-detail.component';
 import { ConvertToSpacesPipe } from '../shared/convert-to-spaces.pipe';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
@@ -23,6 +23,7 @@ import { ProductEditComponent } from './product-edit.component';
     ],
     imports: [
         SharedModule,
+        ReactiveFormsModule,
         HttpClientModule,
         RouterModule.forChild([
             { path: 'products', component: ProductListComponent },
