@@ -27,7 +27,7 @@ import { ProductEditComponent } from './product-edit.component';
         HttpClientModule,
         RouterModule.forChild([
             { path: 'products', component: ProductListComponent },
-            { path: 'productEdit', component: ProductEditComponent},
+            { path: 'productEdit/:id', component: ProductEditComponent},
             { path: 'product/:id', canActivate: [ProductDetailGuard], component: ProductDetailComponent }
         ])
     ],
