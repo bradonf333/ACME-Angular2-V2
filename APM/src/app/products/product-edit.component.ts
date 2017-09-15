@@ -36,14 +36,14 @@ export class ProductEditComponent implements OnInit {
       Validators.minLength(3),
       Validators.maxLength(50)]],
       productCode: ['', Validators.required],
-      //starRating: ['', NumberValidators.range(1, 5)],
+      // starRating: ['', NumberValidators.range(1, 5)],
       starRating: '',
       tags: this.fb.array([]),
       description: ''
     });
 
     const id = +this.route.snapshot.params['id'];
-    //this.pageTitle += `: ${id}`;
+    // this.pageTitle += `: ${id}`;
 
     /** Calls the service to return a list of products */
     this.productService.getProduct(id)
