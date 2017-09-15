@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { IProduct } from './product';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from './product.service';
+
+
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-product-edit',
@@ -11,23 +17,44 @@ export class ProductEditComponent implements OnInit {
   pageTitle: string = 'Product Edit';
   errorMessage: string;
   productForm: FormGroup;
-  
-  constructor(private fb: FormBuilder) { }
+
+  product: IProduct;
+  private sub: Subscription;
+
+  // Use with the generic validation message class
+  displayMessage: { [key: string]: string } = {};
+
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private productService: ProductService) { }
 
   ngOnInit(): void {
     this.productForm = this.fb.group({
-        productName: ['', [Validators.required,
-                           Validators.minLength(3),
-                           Validators.maxLength(50)]],
-        productCode: ['', Validators.required],
-        //starRating: ['', NumberValidators.range(1, 5)],
-        starRating: '',
-        tags: this.fb.array([]),
-        description: ''
+      productName: ['', [Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(50)]],
+      productCode: ['', Validators.required],
+      //starRating: ['', NumberValidators.range(1, 5)],
+      starRating: '',
+      tags: this.fb.array([]),
+      description: ''
     });
-  }
 
+    const id = +this.route.snapshot.params['id'];
+    //this.pageTitle += `: ${id}`;
+
+    /** Calls the service to return a list of products */
+    this.productService.getProduct(id)
+    .subscribe(
+        product => {
+            this.product = product;
+        },
+        error => this.errorMessage = <any>error);
+  }
 }
+
 /* Class once we get everything working
 export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
