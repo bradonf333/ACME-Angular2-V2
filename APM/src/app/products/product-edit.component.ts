@@ -8,7 +8,7 @@ import { ProductService } from './product.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
-  selector: 'app-product-edit',
+  selector: 'pm-product-edit',
   templateUrl: './product-edit.component.html',
   styleUrls: ['./product-edit.component.css']
 })
