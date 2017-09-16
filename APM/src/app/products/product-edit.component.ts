@@ -4,7 +4,6 @@ import { IProduct } from './product';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from './product.service';
 
-
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -42,8 +41,30 @@ export class ProductEditComponent implements OnInit {
       description: ''
     });
 
+    /**
+     *  Read the parameter from the route
+     */
+
+    /*
+     * This is using the snapshot method.
+     * It is simple but if the parameter changes and we never leave the page it
+     * will not pick up the new parameter.
+     */
     const id = +this.route.snapshot.params['id'];
-    // this.pageTitle += `: ${id}`;
+
+    /*
+     * This is the observable method.
+     * The code is longer but is much more practical. If the parameter
+     * changes w/o leaving the page this can still pick up the new value.
+     */
+    // this.sub = this.route.params.subscribe(
+    //     params => {
+    //         const id = +params['id'];
+    //         this.getProduct(id);
+    //     }
+    // );
+
+    this.pageTitle += `: ${id}`;
 
     /** Calls the service to return a list of products */
     this.productService.getProduct(id)
@@ -52,6 +73,12 @@ export class ProductEditComponent implements OnInit {
             this.product = product;
         },
         error => this.errorMessage = <any>error);
+  }
+
+  ngOnDestroy() {
+      //Called once, before the instance is destroyed.
+      //Add 'implements OnDestroy' to the class.
+      
   }
 }
 

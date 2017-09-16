@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
-import { ProductDetailGuard } from './product-guard.service';
+import { ProductDetailGuard, ProductEditGuard } from './product-guard.service';
 import { ProductEditComponent } from './product-edit.component';
 
 
@@ -28,12 +28,15 @@ import { ProductEditComponent } from './product-edit.component';
         RouterModule.forChild([
             { path: 'products', component: ProductListComponent },
             { path: 'product/:id', canActivate: [ProductDetailGuard], component: ProductDetailComponent },
-            { path: 'productEdit/:id', component: ProductEditComponent}
-            // { path: 'productEdit/:id', canDeactivate: [ProductEditGuard], component: ProductEditComponent}
+            { path: 'productEdit/:id', canDeactivate: [ProductEditGuard], component: ProductEditComponent}
         ])
     ],
     exports: [],
-    providers: [ ProductService ],
+    providers: [
+        ProductService,
+        ProductDetailGuard,
+        ProductEditGuard
+    ],
 })
 export class ProductModule {
 
