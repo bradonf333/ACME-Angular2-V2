@@ -6,80 +6,99 @@ import { ProductService } from './product.service';
 
 import { Subscription } from 'rxjs/Subscription';
 
+import { NumberValidators } from '../shared/number.validator';
+
 @Component({
-  selector: 'pm-product-edit',
-  templateUrl: './product-edit.component.html',
-  styleUrls: ['./product-edit.component.css']
+    selector: 'pm-product-edit',
+    templateUrl: './product-edit.component.html',
+    styleUrls: ['./product-edit.component.css']
 })
 export class ProductEditComponent implements OnInit {
 
-  pageTitle: string = 'Product Edit';
-  errorMessage: string;
-  productForm: FormGroup;
+    pageTitle: string = 'Product Edit';
+    errorMessage: string;
+    productForm: FormGroup;
 
-  product: IProduct;
-  private sub: Subscription;
+    product: IProduct;
+    private sub: Subscription;
 
-  // Use with the generic validation message class
-  displayMessage: { [key: string]: string } = {};
+    // Use with the generic validation message class
+    displayMessage: { [key: string]: string } = {};
+    private validationMessages: { [key: string]: { [key: string]: string } };
 
-  constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private productService: ProductService) { }
+    constructor(
+        private fb: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private productService: ProductService) {
 
-  ngOnInit(): void {
-    this.productForm = this.fb.group({
-      productName: ['', [Validators.required,
-      Validators.minLength(3),
-      Validators.maxLength(50)]],
-      productCode: ['', Validators.required],
-      // starRating: ['', NumberValidators.range(1, 5)],
-      starRating: '',
-      tags: this.fb.array([]),
-      description: ''
-    });
+        // Defines all of the validation messages for the form.
+        // These could instead be retrieved from a file or database.
+        this.validationMessages = {
+            productName: {
+                required: 'Product name is required.',
+                minlength: 'Product name must be at least three characters.',
+                maxlength: 'Product name cannot exceed 50 characters.'
+            },
+            productCode: {
+                required: 'Product code is required.'
+            },
+            starRating: {
+                range: 'Rate the product between 1 (lowest) and 5 (highest).'
+            }
+        };
+    }
 
-    /**
-     *  Read the parameter from the route
-     */
+    ngOnInit(): void {
+        this.productForm = this.fb.group({
+            productName: ['', [Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(50)]],
+            productCode: ['', Validators.required],
+            starRating: ['', NumberValidators.range(1, 5)],
+            tags: this.fb.array([]),
+            description: ''
+        });
 
-    /*
-     * This is using the snapshot method.
-     * It is simple but if the parameter changes and we never leave the page it
-     * will not pick up the new parameter.
-     */
-    const id = +this.route.snapshot.params['id'];
+        /**
+         *  Read the parameter from the route
+         */
 
-    /*
-     * This is the observable method.
-     * The code is longer but is much more practical. If the parameter
-     * changes w/o leaving the page this can still pick up the new value.
-     */
-    // this.sub = this.route.params.subscribe(
-    //     params => {
-    //         const id = +params['id'];
-    //         this.getProduct(id);
-    //     }
-    // );
+        /*
+         * This is using the snapshot method.
+         * It is simple but if the parameter changes and we never leave the page it
+         * will not pick up the new parameter.
+         */
+        const id = +this.route.snapshot.params['id'];
 
-    this.pageTitle += `: ${id}`;
+        /*
+         * This is the observable method.
+         * The code is longer but is much more practical. If the parameter
+         * changes w/o leaving the page this can still pick up the new value.
+         */
+        // this.sub = this.route.params.subscribe(
+        //     params => {
+        //         const id = +params['id'];
+        //         this.getProduct(id);
+        //     }
+        // );
 
-    /** Calls the service to return a list of products */
-    this.productService.getProduct(id)
-    .subscribe(
-        product => {
-            this.product = product;
-        },
-        error => this.errorMessage = <any>error);
-  }
+        this.pageTitle += `: ${id}`;
 
-  ngOnDestroy() {
-      //Called once, before the instance is destroyed.
-      //Add 'implements OnDestroy' to the class.
-      
-  }
+        /** Calls the service to return a list of products */
+        this.productService.getProduct(id)
+            .subscribe(
+            product => {
+                this.product = product;
+            },
+            error => this.errorMessage = <any>error);
+    }
+
+    //   ngOnDestroy() {
+    //       //Called once, before the instance is destroyed.
+    //       //Add 'implements OnDestroy' to the class.
+
+    //   }
 }
 
 /* Class once we get everything working

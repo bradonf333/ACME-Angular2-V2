@@ -107,5 +107,12 @@
 
 
 Product Info
-<br> {{ product.productId }}
-<br> {{ product.productName }}
+<br>ProductId {{ product.productId }}
+<br>Product Name {{ product.productName }}
+<br>Star Rating {{ product.starRating.valid }}
+<br>
+<br>
+Form Info
+<br>Dirty: {{ productForm.dirty }}
+<br>Touched: {{ productForm.touched }}
+<br>Valid: {{ productForm.valid }}
