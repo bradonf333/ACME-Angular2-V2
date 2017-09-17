@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { IProduct } from './product';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { NumberValidators } from '../shared/number.validator';
     templateUrl: './product-edit.component.html',
     styleUrls: ['./product-edit.component.css']
 })
-export class ProductEditComponent implements OnInit {
+export class ProductEditComponent implements OnInit, OnDestroy {
 
     pageTitle: string = 'Product Edit';
     errorMessage: string;
@@ -69,36 +69,55 @@ export class ProductEditComponent implements OnInit {
          * It is simple but if the parameter changes and we never leave the page it
          * will not pick up the new parameter.
          */
-        const id = +this.route.snapshot.params['id'];
+        // const id = +this.route.snapshot.params['id'];
 
         /*
          * This is the observable method.
          * The code is longer but is much more practical. If the parameter
          * changes w/o leaving the page this can still pick up the new value.
          */
-        // this.sub = this.route.params.subscribe(
-        //     params => {
-        //         const id = +params['id'];
-        //         this.getProduct(id);
-        //     }
-        // );
-
-        this.pageTitle += `: ${id}`;
-
-        /** Calls the service to return a list of products */
-        this.productService.getProduct(id)
-            .subscribe(
-            product => {
-                this.product = product;
-            },
-            error => this.errorMessage = <any>error);
+        this.sub = this.route.params.subscribe(
+            params => {
+                const id = +params['id'];
+                this.getProduct(id);
+            }
+        );
     }
 
-    //   ngOnDestroy() {
-    //       //Called once, before the instance is destroyed.
-    //       //Add 'implements OnDestroy' to the class.
+    getProduct(id: number): void {
+        this.productService.getProduct(id)
+            .subscribe(
+            (product: IProduct) => this.onProductRetrieved(product),
+            (error: any) => this.errorMessage = <any>error
+            );
+    }
 
-    //   }
+    onProductRetrieved(product: IProduct): void {
+        if (this.productForm) {
+            this.productForm.reset();
+        }
+        this.product = product;
+
+        if (this.product.id === 0) {
+            this.pageTitle = 'Add Product';
+        } else {
+            this.pageTitle = `Edit Product: ${this.product.productName}`;
+        }
+
+        // Update the data on the form
+        this.productForm.patchValue({
+            productName: this.product.productName,
+            productCode: this.product.productCode,
+            starRating: this.product.starRating,
+            description: this.product.description
+        });
+        this.productForm.setControl('tags', this.fb.array(this.product.tags || []));
+    }
+
+      ngOnDestroy() {
+          // Called once, before the instance is destroyed.
+          // Add 'implements OnDestroy' to the class.
+      }
 }
 
 /* Class once we get everything working
