@@ -12,6 +12,8 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { ProductDetailGuard, ProductEditGuard } from './product-guard.service';
 import { ProductEditComponent } from './product-edit.component';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { ProductData } from './product-data';
 
 
 @NgModule({
@@ -25,6 +27,7 @@ import { ProductEditComponent } from './product-edit.component';
         SharedModule,
         ReactiveFormsModule,
         HttpClientModule,
+        HttpClientInMemoryWebApiModule.forRoot(ProductData),
         RouterModule.forChild([
             { path: 'products', component: ProductListComponent },
             { path: 'product/:id', canActivate: [ProductDetailGuard], component: ProductDetailComponent },

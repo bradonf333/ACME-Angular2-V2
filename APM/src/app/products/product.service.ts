@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { IProduct } from './product';
 
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/do';
 
 
@@ -36,7 +37,7 @@ export class ProductService {
      */
     getProduct(id: number): Observable<IProduct> {
         return this.getProducts()
-        .map((products: IProduct[]) => products.find(p => p.productId === id));
+        .map((products: IProduct[]) => products.find(p => p.id === id));
     }
 
     /**

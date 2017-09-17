@@ -36,7 +36,7 @@
               <img *ngIf='showImage' [src]='product.imageUrl' [title]='product.productName' 
                   [style.width.px]='imageWidth' [style.margin.px]='imageMargin'>
             </td>
-            <td><a [routerLink]="['/product', product.productId]">
+            <td><a [routerLink]="['/product', product.id]">
               {{ product.productName }}</a>
             </td>
             <td>{{ product.productCode | lowercase | convertToSpaces: '-' }}</td>
@@ -48,7 +48,7 @@
             </td>
             <td>
               <a class="btn btn-primary"
-                 [routerLink]="['/productEdit', product.productId]">Edit
+                 [routerLink]="['/productEdit', product.id]">Edit
               </a>
             </td>
           </tr>
