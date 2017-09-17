@@ -114,6 +114,27 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         this.productForm.setControl('tags', this.fb.array(this.product.tags || []));
     }
 
+    saveProduct(): void {
+        if (this.productForm.dirty && this.productForm.valid) {
+            // Copy the form values over the product object values
+            const p = Object.assign({}, this.product, this.productForm.value);
+
+            this.productService.saveProduct(p)
+                .subscribe(
+                    () => this.onSaveComplete(),
+                    (error: any) => this.errorMessage = <any>error
+                );
+        } else if (!this.productForm.dirty) {
+            this.onSaveComplete();
+        }
+    }
+
+    onSaveComplete(): void {
+        // Reset the form to clear the flags
+        this.productForm.reset();
+        this.router.navigate(['/products']);
+    }
+
       ngOnDestroy() {
           // Called once, before the instance is destroyed.
           // Add 'implements OnDestroy' to the class.

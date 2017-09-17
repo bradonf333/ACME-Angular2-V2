@@ -26,7 +26,6 @@ import { ProductData } from './product-data';
     imports: [
         SharedModule,
         ReactiveFormsModule,
-        HttpClientModule,
         InMemoryWebApiModule.forRoot(ProductData),
         RouterModule.forChild([
             { path: 'products', component: ProductListComponent },

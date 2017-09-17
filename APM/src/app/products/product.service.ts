@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Response, Http } from '@angular/http';
+import { Response, Http, RequestOptions, Headers } from '@angular/http';
 import { IProduct } from './product';
 
 import { Observable } from 'rxjs/Observable';
@@ -51,6 +51,32 @@ export class ProductService {
         return this.http.get(url)
             .map(this.extractData)
             .do(data => console.log('getProduct: ' + JSON.stringify(data)))
+            .catch(this.handleError);
+    }
+
+    saveProduct(product: IProduct): Observable<IProduct> {
+        const headers = new Headers({ 'Content-Type': 'application/json' });
+        const options = new RequestOptions({ headers: headers });
+
+        if (product.id === 0) {
+            return this.createProduct(product, options);
+        }
+        return this.updateProduct(product, options);
+    }
+
+    private createProduct(product: IProduct, options: RequestOptions): Observable<IProduct> {
+        product.id = undefined;
+        return this.http.post(this.baseUrl, product, options)
+            .map(this.extractData)
+            .do(data => console.log('createProduct: ' + JSON.stringify(data)))
+            .catch(this.handleError);
+    }
+
+    private updateProduct(product: IProduct, options: RequestOptions): Observable<IProduct> {
+        const url = `${this.baseUrl}/${product.id}`;
+        return this.http.put(url, product, options)
+            .map(() => product)
+            .do(data => console.log('updateProduct: ' + JSON.stringify(data)))
             .catch(this.handleError);
     }
 
