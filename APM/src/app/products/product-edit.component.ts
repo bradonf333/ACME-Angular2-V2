@@ -142,7 +142,7 @@ export class ProductEditComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         };
 
-        // Define an instance of the validator for use with this form, 
+        // Define an instance of the validator for use with this form,
         // passing in this form's set of validation messages.
         this.genericValidator = new GenericValidator(this.validationMessages);
     }
