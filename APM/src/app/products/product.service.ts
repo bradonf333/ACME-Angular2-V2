@@ -80,6 +80,16 @@ export class ProductService {
             .catch(this.handleError);
     }
 
+    deleteProduct(id: number): Observable<Response> {
+        const headers = new Headers({ 'Content-Type': 'application/json' });
+        const options = new RequestOptions({ headers: headers });
+
+        const url = `${this.baseUrl}/${id}`;
+        return this.http.delete(url, options)
+            .do(data => console.log('deleteProduct: ' + JSON.stringify(data)))
+            .catch(this.handleError);
+    }
+
     /**
      * Takes an error, logs it to the console and throws it to the calling code.
      * @param error

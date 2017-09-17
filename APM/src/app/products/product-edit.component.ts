@@ -135,6 +135,21 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['/products']);
     }
 
+    deleteProduct(): void {
+        if (this.product.id === 0) {
+            // Don't delete, it was never saved.
+            this.onSaveComplete();
+       } else {
+            if (confirm(`Really delete the product: ${this.product.productName}?`)) {
+                this.productService.deleteProduct(this.product.id)
+                    .subscribe(
+                        () => this.onSaveComplete(),
+                        (error: any) => this.errorMessage = <any>error
+                    );
+            }
+        }
+    }
+
       ngOnDestroy() {
           // Called once, before the instance is destroyed.
           // Add 'implements OnDestroy' to the class.
