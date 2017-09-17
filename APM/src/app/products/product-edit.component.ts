@@ -8,6 +8,8 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { NumberValidators } from '../shared/number.validator';
 
+import 'rxjs/add/operator/debounceTime';
+
 @Component({
     selector: 'pm-product-edit',
     templateUrl: './product-edit.component.html',
@@ -25,6 +27,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     // Use with the generic validation message class
     displayMessage: { [key: string]: string } = {};
     private validationMessages: { [key: string]: { [key: string]: string } };
+    formErrors = {
+        'productName': '',
+        'productCode': '',
+        'starRating': '',
+    };
 
     constructor(
         private fb: FormBuilder,
@@ -36,7 +43,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         // These could instead be retrieved from a file or database.
         this.validationMessages = {
             productName: {
-                required: 'Product name is required.',
+                required:  'Product name is required.',
                 minlength: 'Product name must be at least three characters.',
                 maxlength: 'Product name cannot exceed 50 characters.'
             },
@@ -50,15 +57,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.productForm = this.fb.group({
-            productName: ['', [Validators.required,
-            Validators.minLength(3),
-            Validators.maxLength(50)]],
-            productCode: ['', Validators.required],
-            starRating: ['', NumberValidators.range(1, 5)],
-            tags: this.fb.array([]),
-            description: ''
-        });
+        this.buildForm();
 
         /**
          *  Read the parameter from the route
@@ -82,6 +81,26 @@ export class ProductEditComponent implements OnInit, OnDestroy {
                 this.getProduct(id);
             }
         );
+    }
+
+    buildForm() {
+        this.productForm = this.fb.group({
+            productName: ['',
+                [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+            productCode: ['', Validators.required],
+            starRating: ['', NumberValidators.range(1, 5)],
+            tags: this.fb.array([]),
+            description: ''
+        });
+
+        // Watches for all changes on the customer form
+        this.productForm.valueChanges
+            .debounceTime(1000)
+            .subscribe(data => this.onValueChanged(data));
+
+        // Resets the validation messages
+        this.onValueChanged();
+
     }
 
     getProduct(id: number): void {
@@ -121,8 +140,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
             this.productService.saveProduct(p)
                 .subscribe(
-                    () => this.onSaveComplete(),
-                    (error: any) => this.errorMessage = <any>error
+                () => this.onSaveComplete(),
+                (error: any) => this.errorMessage = <any>error
                 );
         } else if (!this.productForm.dirty) {
             this.onSaveComplete();
@@ -139,21 +158,59 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         if (this.product.id === 0) {
             // Don't delete, it was never saved.
             this.onSaveComplete();
-       } else {
+        } else {
             if (confirm(`Really delete the product: ${this.product.productName}?`)) {
                 this.productService.deleteProduct(this.product.id)
                     .subscribe(
-                        () => this.onSaveComplete(),
-                        (error: any) => this.errorMessage = <any>error
+                    () => this.onSaveComplete(),
+                    (error: any) => this.errorMessage = <any>error
                     );
             }
         }
     }
 
-      ngOnDestroy() {
-          // Called once, before the instance is destroyed.
-          // Add 'implements OnDestroy' to the class.
-      }
+    ngOnDestroy() {
+        // Called once, before the instance is destroyed.
+        // Add 'implements OnDestroy' to the class.
+    }
+
+    /**
+   * Loops through all FormControls in the CustomerForm and sets the
+   * validation message when appropriate.
+   * @param data
+   */
+    onValueChanged(data?: any) {
+
+        // Make sure the form is valid
+        if (!this.productForm) {
+            return;
+        }
+
+        // Variable for the form
+        const form = this.productForm;
+
+        // Loop through the form
+        for (const field in this.formErrors) {
+            // TsLint made me have this if statement
+            if (this.formErrors.hasOwnProperty(field)) {
+
+                // Reset the values in the formErrors property and get the current FormControl
+                this.formErrors[field] = '';
+                const control = form.get(field);
+
+                // Check if the FormControl has been touched or dirty and is not valid
+                // If so set the message in the formErrors property.
+                if (control && (control.touched || control.dirty) && !control.valid) {
+                    const messages = this.validationMessages[field];
+                    for (const key in control.errors) {
+                        if (control.errors.hasOwnProperty(key)) {
+                            this.formErrors[field] += messages[key] + ' ';
+                        }
+                    }
+                }
+            }
+        }
+    } // Ends onValueChanged
 }
 
 /* Class once we get everything working
