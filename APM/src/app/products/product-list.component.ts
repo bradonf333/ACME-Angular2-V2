@@ -36,13 +36,14 @@ export class ProductListComponent implements OnInit {
     /**
      * Method called when the page is initialized
      */
-    ngOnInit() {
+    ngOnInit(): void {
 
         /** Calls the service to return a list of products */
         this._productService.getProducts().subscribe(
             products => {
                 this.products = products;
                 this.filteredProducts = this.products;
+                console.log(this.filteredProducts);
             },
             error => this.errorMessage = <any>error);
 
